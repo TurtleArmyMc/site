@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "module": "NodeNext",
+        "target": "ESNext",
+        "outDir": "./build",
+        "moduleResolution": "NodeNext",
+    },
+}
