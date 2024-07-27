@@ -2,7 +2,8 @@
   "name": "sitegen",
   "version": "1.0.0",
   "scripts": {
-    "build": "node --loader ts-node/esm src/main.ts"
+    "build": "node --import \"data:text/javascript,import { register } from \\\"node:module\\\"; import { pathToFileURL } from \\\"node:url\\\"; register(\\\"ts-node/esm\\\", pathToFileURL(\\\"./\\\"));\" src/main.ts build",
+    "serve": "node --import \"data:text/javascript,import { register } from \\\"node:module\\\"; import { pathToFileURL } from \\\"node:url\\\"; register(\\\"ts-node/esm\\\", pathToFileURL(\\\"./\\\"));\" src/main.ts serve"
   },
   "type": "module",
   "module": "esnext",

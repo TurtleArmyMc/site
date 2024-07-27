@@ -1,14 +1,21 @@
-import { mkdir, readFile } from "node:fs/promises";
-import { writeFile } from "node:fs/promises";
-import { djotToHtml } from "./djot.js";
+import { argv, exit } from "node:process";
+import { buildPosts } from "./build.js";
+import { serveSite } from "./serve.js";
 
 async function main() {
-    const template = (await readFile("templates/post.html")).toString();
-    const dj = (await readFile("posts/cheatsheet.dj")).toString();
-    const rendered = djotToHtml(dj);
-    const html = template.replace("<!-- content -->", rendered);
-    await mkdir("dist/", { recursive: true });
-    await writeFile("dist/cheatsheet.html", html);
+    const args = argv.slice(2);
+    if (args) {
+        switch (args[0]) {
+            case "build":
+                await buildPosts();
+                return;
+            case "serve":
+                await serveSite(args.slice(1));
+            return;
+        }
+    }
+    console.error(`Invalid args "${args}"`);
+    exit(1);
 }
 
 await main();
