@@ -4,5 +4,6 @@
         "target": "ESNext",
         "outDir": "./build",
         "moduleResolution": "NodeNext",
+        "strict": true,
     },
 }

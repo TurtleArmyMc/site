@@ -1,0 +1,82 @@
+More to be said...{refnote=firstnote}
+
+_italic_
+
+*bold*
+
+_*both*_
+
+H~2~0
+
+20^th^
+
+{=highlighted=}
+
+{+insert+}
+
+{-delete-}
+
+{note=firstnote}
+...in a sidenote!
+
+> Some blockquoted
+> content in here
+
+---
+
+```
+$ tree
+.
+├── aa
+│   └── foo.txt
+├── bb
+│   └── bar.txt
+└── c.png
+```
+
+```js
+function main(arg) {
+    console.log("Wello world!");
+}
+```
+
+Ellipsis...
+
+En-dash -- to here
+
+Em-dash --- to here
+
+"Curved quotes"
+
+[example website](https://jonnjordan.dev)
+
+# Header 1
+
+## H2
+
+### H3
+
+* A
+* B
+* C
+
+- X
+- Y
+- Z
+
+1. A
+2. B
+3. C
+
+: definition list
+
+  Defines stuff
+
+: second item
+
+  Defines more
+
+| A | B | C |
+| --- | --- | ---|
+| X | Y | Z |
+| 1 | 2 | 3 |

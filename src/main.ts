@@ -1,14 +1,14 @@
-import * as djot from "@djot/djot";
-import { readFile } from "fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
+import { djotToHtml } from "./djot.js";
 
 async function main() {
-    const buf = await readFile("contents/test.dj");
-    const str = buf.toString();
-    console.log(str);
-    console.log();
-    const ast = djot.parse(str);
-    const rendered = djot.renderHTML(ast);
-    console.log(rendered);
+    const template = (await readFile("templates/post.html")).toString();
+    const dj = (await readFile("posts/cheatsheet.dj")).toString();
+    const rendered = djotToHtml(dj);
+    const html = template.replace("<!-- content -->", rendered);
+    await mkdir("dist/", { recursive: true });
+    await writeFile("dist/cheatsheet.html", html);
 }
 
 await main();
