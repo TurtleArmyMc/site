@@ -11,6 +11,8 @@ export type PostInfo = {
 
 export type ReadCache = { [file: string]: Promise<string> };
 
+export const SOURCES = ["posts", "templates"];
+
 // File is relative to /dist
 export async function buildPosts(): Promise<PostInfo[]> {
     const [post_files, _] = await Promise.all([readdir("posts"), rm("dist", { recursive: true, force: true })]);
@@ -35,5 +37,5 @@ async function compilePost(filename: string, templatesCache?: ReadCache): Promis
     const html = await renderWithTemplate("post.html", djotToHtml(raw), templatesCache);
     const file = `dist/posts/${name}.html`;
     await writeFile(file, html);
-    return {slug: name, url: `/posts/${name}`, file, contents: html};
+    return { slug: name, url: `/posts/${name}`, file, contents: html };
 }
