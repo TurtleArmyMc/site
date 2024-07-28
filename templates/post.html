@@ -1,19 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Page Title</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
     <style>
+        body {
+            font: 18px/1.5 Arial, sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        a:link {
+            color: var(--link-color);
+        }
+
+        :visited {
+            color: var(--visited-link-color);
+        }
+
         article {
             width: calc(min(85vw, 40rem));
             margin-left: auto;
             margin-right: auto;
         }
+
+        :root {
+            --text-color: #c9d1d9;
+            --bg-color: #0d1117;
+            --link-color: #58a6ff;
+            --visited-link-color: #8e96f0;
+        }
+
+        /* @media (prefers-color-scheme: light) {
+            :root {
+                --text-color: #222;
+                --bg-color: #F0F0F0;
+                --link-color: rgb(48, 48, 252);
+            }
+        } */
     </style>
 </head>
 

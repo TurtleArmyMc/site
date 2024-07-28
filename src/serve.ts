@@ -45,13 +45,13 @@ export async function serveSite(args: string[]) {
 
     async function rebuild(quiet: boolean = false) {
         const posts = await buildPosts();
-        const postLinks = posts.map(({ slug, url }) => `<a href="${url}">${slug}</a>`);
-        const indexPage = await renderWithTemplate("post.html", postLinks.join("\n"));
+        const postLinks = posts.map(({ slug, url }) => `<a href="${url}">${slug}</a>`).join("\n");
+        const indexPage = addClientHotreloadListener(await renderWithTemplate("post.html", postLinks));
 
         siteFiles = { "/": { contents: indexPage, headers: HTML_HEADER } };
         posts.forEach(({ url, contents, file }) => {
             if (file.endsWith(".html")) {
-                contents += `<head><script>new EventSource("/hotreload").onmessage = () => window.location.reload()</script></head>`;
+                contents = addClientHotreloadListener(contents);
             }
             siteFiles[url] = { contents, headers: HTML_HEADER };
         });
@@ -81,4 +81,15 @@ export async function serveSite(args: string[]) {
         res.end("not found");
         console.log(`\t404\t${req.method}\t${req.url}`);
     }
+}
+
+function addClientHotreloadListener(html: string): string {
+    const SCRIPT = `<script>new EventSource("/hotreload").onmessage = () => window.location.reload()</script>`;
+    const headInx = html.indexOf("<head>");
+    if (headInx !== -1) {
+        return `${html.substring(0, headInx)}${SCRIPT}${html.substring(headInx)}`;
+    }
+    let htmlInx = html.indexOf("<html>");
+    const HEAD_SCRIPT = `<head>${SCRIPT}</head>`;
+    return htmlInx === -1 ? `${html}${HEAD_SCRIPT}` : `${html.substring(0, htmlInx)}${HEAD_SCRIPT}${html.substring(htmlInx)}`
 }
