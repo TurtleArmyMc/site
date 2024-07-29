@@ -13,6 +13,19 @@
             background-color: var(--bg-color);
         }
 
+        /* Stop h1 from shrinking in article and section tags */
+        /* https://html.spec.whatwg.org/multipage/rendering.html#sections-and-headings */
+        h1,
+        :is(article, aside, nav, section) h1,
+        :is(article, aside, nav, section) :is(article, aside, nav, section) h1,
+        :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) h1,
+        :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) h1,
+        :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) h1 {
+            margin-block: 0.67em;
+            font-size: 2.00em;
+            font-weight: bold;
+        }
+
         a:link {
             color: var(--link-color);
         }
@@ -38,7 +51,7 @@
             text-align: justify;
         }
 
-        .inline_note > aside {
+        .inline_note>aside {
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
         }
@@ -54,7 +67,7 @@
             padding-right: 1rem;
         }
 
-        aside > .note-label {
+        aside>.note-label {
             flex-shrink: 0;
             margin-top: 18px;
             margin-right: 0.5rem;
@@ -71,22 +84,24 @@
             color: var(--sidenote-label-color);
         }
 
-        #notes-sidebar > aside {
+        #notes-sidebar>aside {
             position: absolute;
         }
 
-        #left-sidebar, #notes-sidebar {
+        #left-sidebar,
+        #notes-sidebar {
             display: none;
-            width: 25rem;
+            width: 29rem;
         }
 
-        @media (min-width: 101rem) {
+        @media (min-width: 109rem) {
             article {
                 margin-left: 1rem;
                 margin-right: 1rem;
             }
 
-            #left-sidebar, #notes-sidebar {
+            #left-sidebar,
+            #notes-sidebar {
                 display: block;
             }
         }
