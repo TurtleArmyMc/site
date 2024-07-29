@@ -1,5 +1,3 @@
-More to be said...{refnote=firstnote}
-
 _italic_
 
 *bold*
@@ -15,9 +13,6 @@ H~2~0
 {+insert+}
 
 {-delete-}
-
-{note=firstnote}
-...in a sidenote!
 
 > Some blockquoted
 > content in here
@@ -80,3 +75,21 @@ Em-dash --- to here
 | --- | --- | ---|
 | X | Y | Z |
 | 1 | 2 | 3 |
+
+More to be{refnote=a} said...
+
+Sint omnis sed quae pariatur exercitationem. Molestiae incidunt quae corporis facilis ipsam totam ex voluptates. Voluptate perspiciatis molestiae amet rerum illum non. Repellat repellendus eaque aut sequi eos sit quaerat.{refnote=a} Quia id alias sed deserunt qui rerum. Non in maxime iste quos natus incidunt dolorum praesentium.
+
+Rerum consequatur blanditiis laboriosam ullam. Accusantium quae ea architecto. Iusto voluptatem et voluptatem atque officiis sed quisquam corporis.
+
+{note=a}
+...in some...
+
+{note=a}
+...[sidenotes](https://jonnjordan.dev)! Qui quas rem excepturi sequi. Enim quis in corrupti ullam repellendus. Exercitationem aliquid est in aut maxime beatae cupiditate. Eum quisquam accusantium in nam. Voluptas aliquam aliquam incidunt eius asperiores sunt fugiat voluptatum. Blanditiis suscipit dolorem dignissimos.
+
+Qui quas rem excepturi sequi. Enim quis in corrupti ullam repellendus. Exercitationem aliquid est in aut maxime beatae cupiditate. Eum quisquam accusantium in nam. Voluptas aliquam aliquam incidunt eius asperiores sunt fugiat voluptatum. Blanditiis suscipit dolorem dignissimos.
+
+Quia mollitia quisquam omnis quas similique ut. Est aut corporis cupiditate qui nulla. Id quae est deleniti. Ipsum et fugit aperiam et at pariatur nisi aliquam. Excepturi consequatur quos nesciunt.
+
+Ut est qui corporis illum eligendi reprehenderit repellat. Corrupti et blanditiis omnis. Quasi quisquam consequuntur quo consequatur aut excepturi.

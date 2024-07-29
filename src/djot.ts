@@ -16,11 +16,11 @@ function sidenoteOverrides(): djot.Visitor<djot.HTMLRenderer, string> {
         if (node.attributes && node.attributes["refnote"]) {
             const inx = sidenoteRefIndex++;
             delete node.attributes["refnote"];
-            return `${context.renderAstNodeDefault(node)}<a class="noteref" href="#note-${inx}" id="note-${inx}-ref">${inx}</a>`;
+            return `${context.renderAstNodeDefault(node)}<a class="noteref" href="#note-${inx}" id="note-${inx}-ref"><span class="note-label">${inx}</span></a>`;
         } else if (node.attributes && node.attributes["note"]) {
             delete node.attributes["note"];
             const inx = sidenoteBodyIndex++;
-            return `<div class="inline_note"><div class="note" id="note-${inx}">${inx} ${context.renderAstNodeDefault(node)}</div></div>`;
+            return `<div class="inline_note"><aside class="note" id="note-${inx}"><span class="note-label">${inx}</span>${context.renderAstNodeDefault(node)}</aside></div>`;
         }
         return context.renderAstNodeDefault(node);
     };

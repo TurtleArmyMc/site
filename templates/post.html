@@ -8,7 +8,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <style>
         body {
-            font: 18px/1.5 Arial, sans-serif;
+            font: 1.12rem/1.5 Arial, sans-serif;
             color: var(--text-color);
             background-color: var(--bg-color);
         }
@@ -21,16 +21,83 @@
             color: var(--visited-link-color);
         }
 
+        main {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+        }
+
         article {
-            width: calc(min(85vw, 40rem));
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 46rem;
+            margin-left: 0.5ch;
+            margin-right: 0.5ch;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        .inline_note > aside {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        aside {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            width: inherit;
+            background-color: var(--sidenote-bg-color);
+            border-radius: 0.5rem;
+            box-shadow: inset;
+            padding-right: 1rem;
+        }
+
+        aside > .note-label {
+            flex-shrink: 0;
+            margin-top: 18px;
+            margin-right: 0.5rem;
+        }
+
+        .note-label {
+            display: inline-block;
+            margin-left: 0.5rem;
+            width: 1.5em;
+            height: 1.5em;
+            border-radius: 0.2em;
+            background-color: var(--sidenote-label-bg-color);
+            text-align: center;
+            color: var(--sidenote-label-color);
+        }
+
+        #notes-sidebar > aside {
+            position: absolute;
+        }
+
+        #left-sidebar, #notes-sidebar {
+            display: none;
+            width: 25rem;
+        }
+
+        @media (min-width: 101rem) {
+            article {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+
+            #left-sidebar, #notes-sidebar {
+                display: block;
+            }
         }
 
         :root {
             --text-color: #c9d1d9;
             --bg-color: #0d1117;
             --link-color: #58a6ff;
+            --sidenote-label-color: #000000;
+            --sidenote-label-bg-color: #82BAFA;
+            --sidenote-bg-color: #131c29;
             --visited-link-color: #8e96f0;
         }
 
@@ -42,12 +109,57 @@
             }
         } */
     </style>
+    <script>
+        /** @type HTMLElement[] */
+        let notes = undefined;
+        const minY = (e) => window.scrollY + e.getBoundingClientRect().top;
+        const maxY = (e) => window.scrollY + e.getBoundingClientRect().bottom;
+        function moveSidenotes() {
+            if (!notes) {
+                notes = [...document.getElementsByClassName("note")];
+            }
+            const notesSidebar = document.getElementById("notes-sidebar");
+            const inlineNoteWrappers = [...document.getElementsByClassName("inline_note")];
+            for (const note of notes) {
+                note.parentNode?.removeChild(note);
+                note.style.top = "";
+            }
+            if (notesSidebar.checkVisibility()) {
+                notesSidebar.replaceChildren();
+                const noterefs = [...document.getElementsByClassName("noteref")];
+                let prevNoteBottom = 0;
+                for (let i = 0; i < notes.length && i < noterefs.length; i++) {
+                    notesSidebar.appendChild(notes[i]);
+                    const noterefY = minY(noterefs[i].getElementsByClassName("note-label")[0]);
+                    const noteLabel = notes[i].getElementsByClassName("note-label")[0];
+                    const noteLabelDelta = minY(noteLabel) - minY(notes[i]);
+                    const targetNoteY = noterefY - noteLabelDelta;
+                    notes[i].style.top = `${Math.max(prevNoteBottom, targetNoteY)}px`;
+                    const labelHeight = maxY(noteLabel) - minY(noteLabel);
+                    prevNoteBottom = maxY(notes[i]) + (labelHeight / 4);
+                }
+                for (let i = noterefs.length; i < notes.length; i++) {
+                    inlineNoteWrappers[i].appendChild(notes[i]);
+                }
+            } else {
+                for (let i = 0; i < notes.length && i < inlineNoteWrappers.length; i++) {
+                    inlineNoteWrappers[i].appendChild(notes[i]);
+                }
+            }
+        }
+        window.addEventListener("load", moveSidenotes);
+        window.addEventListener("resize", moveSidenotes);
+    </script>
 </head>
 
 <body>
-    <article>
-        <!-- content -->
-    </article>
+    <main>
+        <div id="left-sidebar"></div>
+        <article>
+            <!-- content -->
+        </article>
+        <div id="notes-sidebar"></div>
+    </main>
 </body>
 
 </html>
