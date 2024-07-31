@@ -45,15 +45,15 @@ export async function serveSite(args: string[]) {
 
     async function rebuild(quiet: boolean = false) {
         const posts = await buildPosts();
-        const postLinks = posts.map(({ slug, url }) => `<a href="${url}">${slug}</a>`).join("\n");
+        const postLinks = posts.map(({ path }) => `<a href="${path}">${path}</a>`).join("\n");
         const indexPage = addClientHotreloadListener(await renderWithTemplate("post.html", postLinks));
 
         siteFiles = { "/": { contents: indexPage, headers: HTML_HEADER } };
-        posts.forEach(({ url, contents, file }) => {
-            if (file.endsWith(".html")) {
+        posts.forEach(({ contents, path }) => {
+            if (path.endsWith(".html")) {
                 contents = addClientHotreloadListener(contents);
             }
-            siteFiles[url] = { contents, headers: HTML_HEADER };
+            siteFiles[`/${path}`] = { contents, headers: HTML_HEADER };
         });
 
         if (!quiet) {
