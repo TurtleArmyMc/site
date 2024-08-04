@@ -1,16 +1,18 @@
 import { watch } from "node:fs";
-import { buildPosts, renderWithTemplate, SOURCES } from "./build.js";
+import { buildPosts, SOURCES } from "./build.js";
 import { createServer, IncomingMessage, OutgoingHttpHeaders, ServerResponse } from "node:http";
 import EventEmitter from "node:events";
+import { readFile } from "node:fs/promises";
 
 const HTML_HEADER = { 'Content-Type': 'text/html' };
+const PNG_HEADER = { 'Content-Type': 'image/png' };
 const EVENT_STREAM_HEADER = {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache"
 };
 
 type Serve = {
-    contents: string,
+    contents: string | Buffer,
     headers: OutgoingHttpHeaders,
 };
 
@@ -28,7 +30,7 @@ export async function serveSite(args: string[]) {
 
     let reloadEvent: EventEmitter = new EventEmitter()
 
-    let siteFiles: { [url: string]: Serve | undefined } = {};
+    let pathToResponse: { [url: string]: Serve | undefined } = {};
     await rebuild(true);
 
     SOURCES.forEach(
@@ -44,17 +46,17 @@ export async function serveSite(args: string[]) {
     server.listen(port);
 
     async function rebuild(quiet: boolean = false) {
-        const posts = await buildPosts();
-        const postLinks = posts.map(({ path }) => `<a href="${path}">${path}</a>`).join("\n");
-        const indexPage = addClientHotreloadListener(await renderWithTemplate("post.html", postLinks));
+        const files = await buildPosts();
+        const indexPage = addClientHotreloadListener(files.find(f => f.path === "index.html")!.contents! as string);
 
-        siteFiles = { "/": { contents: indexPage, headers: HTML_HEADER } };
-        posts.forEach(({ contents, path }) => {
+        pathToResponse = { "/": { contents: indexPage, headers: HTML_HEADER } };
+        files.forEach(({ contents, path }) => {
             if (path.endsWith(".html")) {
-                contents = addClientHotreloadListener(contents);
+                contents = addClientHotreloadListener(contents as string);
             }
-            siteFiles[`/${path}`] = { contents, headers: HTML_HEADER };
+            pathToResponse[`/${path}`] = { contents, headers: fileHeader(path) };
         });
+
 
         if (!quiet) {
             console.log("Built site");
@@ -69,7 +71,7 @@ export async function serveSite(args: string[]) {
                 reloadEvent.once("reload", () => res.end("data: reload\n\n"));
                 return;
             }
-            const toServe = siteFiles[req.url];
+            const toServe = pathToResponse[req.url];
             if (toServe) {
                 res.writeHead(200, toServe.headers);
                 res.end(toServe.contents);
@@ -83,6 +85,16 @@ export async function serveSite(args: string[]) {
     }
 }
 
+function fileHeader(path: string): OutgoingHttpHeaders {
+    if (path.endsWith(".html")) {
+        return HTML_HEADER;
+    }
+    if (path.endsWith(".png")) {
+        return PNG_HEADER;
+    }
+    throw new Error(`unknown extension for file ${path}`);
+}
+
 function addClientHotreloadListener(html: string): string {
     const SCRIPT = `<script>new EventSource("/hotreload").onmessage = () => window.location.reload()</script>`;
     const headInx = html.indexOf("<head>");
@@ -91,5 +103,5 @@ function addClientHotreloadListener(html: string): string {
     }
     let htmlInx = html.indexOf("<html>");
     const HEAD_SCRIPT = `<head>${SCRIPT}</head>`;
-    return htmlInx === -1 ? `${html}${HEAD_SCRIPT}` : `${html.substring(0, htmlInx)}${HEAD_SCRIPT}${html.substring(htmlInx)}`
+    return htmlInx === -1 ? `${html}${HEAD_SCRIPT}` : `${html.substring(0, htmlInx)}${HEAD_SCRIPT}${html.substring(htmlInx)}`;
 }
