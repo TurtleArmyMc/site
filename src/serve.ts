@@ -2,10 +2,10 @@ import { watch } from "node:fs";
 import { buildPosts, SOURCES } from "./build.js";
 import { createServer, IncomingMessage, OutgoingHttpHeaders, ServerResponse } from "node:http";
 import EventEmitter from "node:events";
-import { readFile } from "node:fs/promises";
 
 const HTML_HEADER = { 'Content-Type': 'text/html' };
 const PNG_HEADER = { 'Content-Type': 'image/png' };
+const ICO_HEADER = { 'Content-Type': 'image/vnd.microsoft.icon' };
 const EVENT_STREAM_HEADER = {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache"
@@ -91,6 +91,9 @@ function fileHeader(path: string): OutgoingHttpHeaders {
     }
     if (path.endsWith(".png")) {
         return PNG_HEADER;
+    }
+    if (path.endsWith(".ico")) {
+        return ICO_HEADER;
     }
     throw new Error(`unknown extension for file ${path}`);
 }
