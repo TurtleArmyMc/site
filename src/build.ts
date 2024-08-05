@@ -1,6 +1,6 @@
 import { readdir, readFile, writeFile, rm, mkdir } from "node:fs/promises";
-import { djotToHtml } from "./djot.js";
-import { relative } from "node:path";
+import { parseDjot } from "./djot.js";
+import { basename, relative } from "node:path";
 
 export type FileInfo = {
     path: string,
@@ -32,13 +32,22 @@ export async function buildPosts(): Promise<FileInfo[]> {
     return await writeDistPromise;
 }
 
-export async function renderWithTemplate(templateFile: string, content: string, templatesCache: ReadCache = {}): Promise<string> {
+export async function renderWithTemplate(templateFile: string, props: { [key: string]: string }, templatesCache: ReadCache = {}): Promise<string> {
     let template = templatesCache[templateFile];
     if (!template) {
-        template = readFile(`templates/${templateFile}`, { encoding: "utf8" });
+        template = readFile(`templates/${templateFile}`, { encoding: "utf8" }).then();
         templatesCache[templateFile] = template;
     }
-    return (await template).replace("<!-- content -->", content);
+    let html = await template;
+    for (const prop of Object.keys(props)) {
+        html = html.replaceAll(new RegExp(`<!--\\s*#prop\\s+${prop}\\s*-->`, "g"), props[prop]);
+    }
+    const RE_FIND_PROPS = /<!--\s*#prop\s+(\w+)\s*-->/g;
+    const missingProps = Array.from(html.matchAll(RE_FIND_PROPS)).map(e => e[1]);
+    if (missingProps.length) {
+        throw new Error(`did not give props ${missingProps} for template ${templateFile}`)
+    }
+    return html;
 }
 
 function directoryFiles(dirpath: string): Promise<{ filepaths: string[], dirpaths: string[] }> {
@@ -55,7 +64,14 @@ async function compileFile(filepath: string, templatesCache?: ReadCache): Promis
     // <time datetime="YY-MM-DD">Month DD</time>
 
     const raw = await readFile(`contents/${filepath}`, { encoding: "utf8" });
-    const html = await renderWithTemplate("post.html", djotToHtml(raw), templatesCache);
-    const path = filepath.replace(".dj", ".html");
-    return { path, contents: html };
+    const props = parseDjot(raw);
+    props.title ??= basename(filepath).replace(".dj", "");
+    try {
+        const html = await renderWithTemplate("post.html", props, templatesCache);
+        const path = filepath.replace(".dj", ".html");
+        return { path, contents: html };
+    } catch (e) {
+        console.error(`error rendering file ${filepath}`);
+        throw e;
+    }
 }
