@@ -66,16 +66,17 @@ export async function serveSite(args: string[]) {
 
     function onRequest(req: IncomingMessage, res: ServerResponse) {
         if (req.url) {
-            if (req.url === "/hotreload") {
+            const url = decodeURIComponent(req.url);
+            if (url === "/hotreload") {
                 res.writeHead(200, EVENT_STREAM_HEADER);
                 reloadEvent.once("reload", () => res.end("data: reload\n\n"));
                 return;
             }
-            const toServe = pathToResponse[req.url];
+            const toServe = pathToResponse[url];
             if (toServe) {
                 res.writeHead(200, toServe.headers);
                 res.end(toServe.contents);
-                console.log(`\t200\t${req.method}\t${req.url}`);
+                console.log(`\t200\t${req.method}\t${url}`);
                 return;
             }
         }
