@@ -1,0 +1,71 @@
+# Hi, I'm Patryk
+
+I'm a software developer passionate about creating tools that combine the best of new and old ideas.
+
+## Things I've Done
+
+Here's a few of what I think are the more interesting things I've made.
+
+### Web Based Whiteboard
+
+A site that lets you draw on a layered canvas together with anyone online. I've used this to study for college classes online with friends when we weren't able to meet in person. \
+[Site](https://draw.patryk.codes) \
+[Github](https://github.com/TurtleArmyMc/Online_Whiteboard)
+
+### Tiff Encoder/Decoder
+
+A Tiff-6 spec compliant tiff encoder and decoder. I made this project as a way to get comfortable using Rust, as well as working with binary file formats and formal specifications. I didn't implement any extensions (other than LZW compression), but encoding the baseline image types (bi-level, 4 and 8 bit grayscale, 4 and 8 bit palette color, and full RGB) with the baseline compression algorithms (uncompressed, packbits, and Huffman) is implemented. Decoding is still a work in progress, with only uncompressed grayscale currently supported. \
+[Github](https://github.com/TurtleArmyMc/tiff)
+
+### Minecraft Modding
+
+Since 2020, I've developed a few Minecraft mods using [Fabric](https://fabricmc.net/). They've been downloaded over 1 million times now.
+
+#### Slot Swap
+
+Adds a modifier key to quickly scroll upwards from your hotbar into your inventory. \
+![Slot Swap Icon](/mod-icons/Slot Swap.png){style="height: 5em; float: left; margin-right: 1ch;"}
+[Github](https://github.com/TurtleArmyMc/Slot-Swap) \
+[Curseforge](https://www.curseforge.com/minecraft/mc-mods/slot-swap) \
+[Modrinth](https://modrinth.com/mod/slot-swap)
+
+#### Jockey!
+
+Mobs and players hit by an egg that hatches a chicken ride the newborn baby chick. This is the simplest, silliest, and least popular mod I've made, but it's my favorite. \
+![Jockey Icon](/mod-icons/Jockey.png){style="height: 5em; float: left; margin-right: 1ch;"}
+[Github](https://github.com/TurtleArmyMc/Jockey) \
+[Curseforge](https://www.curseforge.com/minecraft/mc-mods/jockey) \
+[Modrinth](https://modrinth.com/mod/jockey)
+
+#### Panorama Tweaker
+
+Lets you customize how fast the panorama on the main menu screen spins. \
+![Panorama Tweaker Icon](/mod-icons/Panorama Tweaker.png){style="height: 5em; float: left; margin-right: 1ch;"}
+[Github](https://github.com/TurtleArmyMc/Panorama-Tweaker) \
+[Curseforge](https://www.curseforge.com/minecraft/mc-mods/panorama-tweaker) \
+[Modrinth](https://modrinth.com/mod/panorama-tweaker)
+
+#### Blastproof Netherite
+
+Makes netherite (and other fireproof items) immune to explosions, cacti, and float on the void. \
+![Blastproof Netherite Icon](/mod-icons/Blastproof Netherite.png){style="height: 5em; float: left; margin-right: 1ch;"}
+[Github](https://github.com/TurtleArmyMc/Blastproof-Netherite) \
+[Curseforge](https://www.curseforge.com/minecraft/mc-mods/blastproof-netherite)
+
+\
+
+#### Loud Leads
+
+Adds a sound effect for when leads snap. \
+![Loud Leads Icon](/mod-icons/Loud Leads.png){style="height: 5em; float: left; margin-right: 1ch;"}
+[Github](https://github.com/TurtleArmyMc/Loud-Leads) \
+[Curseforge](https://www.curseforge.com/minecraft/mc-mods/loud-leads)
+
+\
+
+#### Double Jump Mod
+
+Adds an enchantment for boots that lets the wearer jump in midair. \
+![Double Jump Icon](/mod-icons/Double Jump.png){style="height: 5em; float: left; margin-right: 1ch;"}
+[Github](https://github.com/TurtleArmyMc/DoubleJump) \
+[Curseforge](https://www.curseforge.com/minecraft/mc-mods/double-jump-mod)
