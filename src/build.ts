@@ -32,7 +32,7 @@ export async function buildPosts(): Promise<FileInfo[]> {
     return await writeDistPromise;
 }
 
-export async function renderWithTemplate(templateFile: string, props: { [key: string]: string }, templatesCache: ReadCache = {}): Promise<string> {
+async function renderWithTemplate(templateFile: string, props: { [key: string]: string }, templatesCache: ReadCache = {}): Promise<string> {
     let template = templatesCache[templateFile];
     if (!template) {
         template = readFile(`templates/${templateFile}`, { encoding: "utf8" }).then();
