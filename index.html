@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Hi, I’m Patryk - patryk.codes</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta name="description" content="I’m a software developer passionate about creating tools that combine the best of new and old ideas." />
+    <style>
+        body {
+            font: 1.12rem/1.5 Arial, sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            hyphens: auto;
+        }
+
+        #header {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        #header a {
+            text-decoration: none;
+            font-style: italic;
+        }
+
+        /* Stop h1 from shrinking in article and section tags */
+        /* https://html.spec.whatwg.org/multipage/rendering.html#sections-and-headings */
+        h1,
+        :is(article, aside, nav, section) h1,
+        :is(article, aside, nav, section) :is(article, aside, nav, section) h1,
+        :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) h1,
+        :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) h1,
+        :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) :is(article, aside, nav, section) h1 {
+            margin-block: 0.67em;
+            font-size: 2.00em;
+            font-weight: bold;
+        }
+
+        a:link {
+            color: var(--link-color);
+        }
+
+        :visited {
+            color: var(--visited-link-color);
+        }
+
+        main {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+        }
+
+        article {
+            width: 46rem;
+            margin-left: 0.5ch;
+            margin-right: 0.5ch;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        .inline_note>aside {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        aside {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            width: inherit;
+            background-color: var(--sidenote-bg-color);
+            border-radius: 0.5rem;
+            box-shadow: inset;
+            padding-right: 1rem;
+        }
+
+        aside>.note-label {
+            flex-shrink: 0;
+            margin-top: 18px;
+            margin-right: 0.5rem;
+        }
+
+        .note-label {
+            display: inline-block;
+            margin-left: 0.5rem;
+            width: 1.5em;
+            height: 1.5em;
+            border-radius: 0.2em;
+            background-color: var(--sidenote-label-bg-color);
+            text-align: center;
+            color: var(--sidenote-label-color);
+        }
+
+        #notes-sidebar>aside {
+            position: absolute;
+        }
+
+        #left-sidebar,
+        #notes-sidebar {
+            display: none;
+            width: 29rem;
+        }
+
+        @media (min-width: 109rem) {
+            article {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+
+            #left-sidebar,
+            #notes-sidebar {
+                display: block;
+            }
+        }
+
+        :root {
+            --text-color: #c9d1d9;
+            --bg-color: #0d1117;
+            --link-color: #58a6ff;
+            --sidenote-label-color: #000000;
+            --sidenote-label-bg-color: #82BAFA;
+            --sidenote-bg-color: #131c29;
+            --visited-link-color: #8e96f0;
+        }
+
+        /* @media (prefers-color-scheme: light) {
+            :root {
+                --text-color: #222;
+                --bg-color: #F0F0F0;
+                --link-color: rgb(48, 48, 252);
+            }
+        } */
+    </style>
+    <script>
+        /** @type HTMLElement[] */
+        let notes = undefined;
+        const minY = (e) => window.scrollY + e.getBoundingClientRect().top;
+        const maxY = (e) => window.scrollY + e.getBoundingClientRect().bottom;
+        function moveSidenotes() {
+            if (!notes) {
+                notes = [...document.getElementsByClassName("note")];
+            }
+            const notesSidebar = document.getElementById("notes-sidebar");
+            const inlineNoteWrappers = [...document.getElementsByClassName("inline_note")];
+            for (const note of notes) {
+                note.parentNode?.removeChild(note);
+                note.style.top = "";
+            }
+            if (notesSidebar.checkVisibility()) {
+                notesSidebar.replaceChildren();
+                const noterefs = [...document.getElementsByClassName("noteref")];
+                let prevNoteBottom = 0;
+                for (let i = 0; i < notes.length && i < noterefs.length; i++) {
+                    notesSidebar.appendChild(notes[i]);
+                    const noterefY = minY(noterefs[i].getElementsByClassName("note-label")[0]);
+                    const noteLabel = notes[i].getElementsByClassName("note-label")[0];
+                    const noteLabelDelta = minY(noteLabel) - minY(notes[i]);
+                    const targetNoteY = noterefY - noteLabelDelta;
+                    notes[i].style.top = `${Math.max(prevNoteBottom, targetNoteY)}px`;
+                    const labelHeight = maxY(noteLabel) - minY(noteLabel);
+                    prevNoteBottom = maxY(notes[i]) + (labelHeight / 4);
+                }
+                for (let i = noterefs.length; i < notes.length; i++) {
+                    inlineNoteWrappers[i].appendChild(notes[i]);
+                }
+            } else {
+                for (let i = 0; i < notes.length && i < inlineNoteWrappers.length; i++) {
+                    inlineNoteWrappers[i].appendChild(notes[i]);
+                }
+            }
+        }
+        window.addEventListener("load", moveSidenotes);
+        window.addEventListener("resize", moveSidenotes);
+    </script>
+</head>
+
+<body>
+    <div id="header">
+        <h1><a href="/">patryk.codes</a></h1>
+    </div>
+    <hr>
+    <main>
+        <div id="left-sidebar"></div>
+        <article>
+            <section id="Hi-I'm-Patryk">
+<h1>Hi, I’m Patryk</h1>
+<p>I’m a software developer passionate about creating tools that combine the best of new and old ideas.</p>
+<section id="Things-I've-Done">
+<h2>Things I’ve Done</h2>
+<p>Here’s a few of what I think are the more interesting things I’ve made.</p>
+<section id="Web-Based-Whiteboard">
+<h3>Web Based Whiteboard</h3>
+<p>A site that lets you draw on a layered canvas together with anyone online. I’ve used this to study for college classes online with friends when we weren’t able to meet in person.<br>
+<a href="https://draw.patryk.codes" target="_blank" rel="noopener noreferrer">Site</a><br>
+<a href="https://github.com/TurtleArmyMc/Online_Whiteboard" target="_blank" rel="noopener noreferrer">Github</a></p>
+</section>
+<section id="Tiff-Encoder-Decoder">
+<h3>Tiff Encoder/Decoder</h3>
+<p>A Tiff-6 spec compliant tiff encoder and decoder. I made this project as a way to get comfortable using Rust, as well as working with binary file formats and formal specifications. I didn’t implement any extensions (other than LZW compression), but encoding the baseline image types (bi-level, 4 and 8 bit grayscale, 4 and 8 bit palette color, and full RGB) with the baseline compression algorithms (uncompressed, packbits, and Huffman) is implemented. Decoding is still a work in progress, with only uncompressed grayscale currently supported.<br>
+<a href="https://github.com/TurtleArmyMc/tiff" target="_blank" rel="noopener noreferrer">Github</a></p>
+</section>
+<section id="Minecraft-Modding">
+<h3>Minecraft Modding</h3>
+<p>Since 2020, I’ve developed a few Minecraft mods using <a href="https://fabricmc.net/" target="_blank" rel="noopener noreferrer">Fabric</a>. They’ve been downloaded over 1 million times now.</p>
+<section id="Slot-Swap">
+<h4>Slot Swap</h4>
+<p>Adds a modifier key to quickly scroll upwards from your hotbar into your inventory.<br>
+<img alt="Slot Swap Icon" src="/mod-icons/Slot Swap.png" style="height: 5em; float: left; margin-right: 1ch;">
+<a href="https://github.com/TurtleArmyMc/Slot-Swap" target="_blank" rel="noopener noreferrer">Github</a><br>
+<a href="https://www.curseforge.com/minecraft/mc-mods/slot-swap" target="_blank" rel="noopener noreferrer">Curseforge</a><br>
+<a href="https://modrinth.com/mod/slot-swap" target="_blank" rel="noopener noreferrer">Modrinth</a></p>
+</section>
+<section id="Jockey">
+<h4>Jockey!</h4>
+<p>Mobs and players hit by an egg that hatches a chicken ride the newborn baby chick. This is the simplest, silliest, and least popular mod I’ve made, but it’s my favorite.<br>
+<img alt="Jockey Icon" src="/mod-icons/Jockey.png" style="height: 5em; float: left; margin-right: 1ch;">
+<a href="https://github.com/TurtleArmyMc/Jockey" target="_blank" rel="noopener noreferrer">Github</a><br>
+<a href="https://www.curseforge.com/minecraft/mc-mods/jockey" target="_blank" rel="noopener noreferrer">Curseforge</a><br>
+<a href="https://modrinth.com/mod/jockey" target="_blank" rel="noopener noreferrer">Modrinth</a></p>
+</section>
+<section id="Panorama-Tweaker">
+<h4>Panorama Tweaker</h4>
+<p>Lets you customize how fast the panorama on the main menu screen spins.<br>
+<img alt="Panorama Tweaker Icon" src="/mod-icons/Panorama Tweaker.png" style="height: 5em; float: left; margin-right: 1ch;">
+<a href="https://github.com/TurtleArmyMc/Panorama-Tweaker" target="_blank" rel="noopener noreferrer">Github</a><br>
+<a href="https://www.curseforge.com/minecraft/mc-mods/panorama-tweaker" target="_blank" rel="noopener noreferrer">Curseforge</a><br>
+<a href="https://modrinth.com/mod/panorama-tweaker" target="_blank" rel="noopener noreferrer">Modrinth</a></p>
+</section>
+<section id="Blastproof-Netherite">
+<h4>Blastproof Netherite</h4>
+<p>Makes netherite (and other fireproof items) immune to explosions, cacti, and float on the void.<br>
+<img alt="Blastproof Netherite Icon" src="/mod-icons/Blastproof Netherite.png" style="height: 5em; float: left; margin-right: 1ch;">
+<a href="https://github.com/TurtleArmyMc/Blastproof-Netherite" target="_blank" rel="noopener noreferrer">Github</a><br>
+<a href="https://www.curseforge.com/minecraft/mc-mods/blastproof-netherite" target="_blank" rel="noopener noreferrer">Curseforge</a></p>
+<p><br>
+</p>
+</section>
+<section id="Loud-Leads">
+<h4>Loud Leads</h4>
+<p>Adds a sound effect for when leads snap.<br>
+<img alt="Loud Leads Icon" src="/mod-icons/Loud Leads.png" style="height: 5em; float: left; margin-right: 1ch;">
+<a href="https://github.com/TurtleArmyMc/Loud-Leads" target="_blank" rel="noopener noreferrer">Github</a><br>
+<a href="https://www.curseforge.com/minecraft/mc-mods/loud-leads" target="_blank" rel="noopener noreferrer">Curseforge</a></p>
+<p><br>
+</p>
+</section>
+<section id="Double-Jump-Mod">
+<h4>Double Jump Mod</h4>
+<p>Adds an enchantment for boots that lets the wearer jump in midair.<br>
+<img alt="Double Jump Icon" src="/mod-icons/Double Jump.png" style="height: 5em; float: left; margin-right: 1ch;">
+<a href="https://github.com/TurtleArmyMc/DoubleJump" target="_blank" rel="noopener noreferrer">Github</a><br>
+<a href="https://www.curseforge.com/minecraft/mc-mods/double-jump-mod" target="_blank" rel="noopener noreferrer">Curseforge</a></p>
+</section>
+</section>
+</section>
+</section>
+
+        </article>
+        <div id="notes-sidebar"></div>
+    </main>
+    <br>
+    <footer>
+        <div style="display: flex; justify-content: center; flex-wrap: wrap; column-gap: 1.5ch;">
+            <a href="https://github.com/TurtleArmyMc" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true" viewBox="0 0 24 24" data-view-component="true"
+                    style="margin-right: 0.5ch; width: 1em; height: 1em; fill: var(--text-color);">
+                    <path
+                        d="M12.5.75C6.146.75 1 5.896 1 12.25c0 5.089 3.292 9.387 7.863 10.91.575.101.79-.244.79-.546 0-.273-.014-1.178-.014-2.142-2.889.532-3.636-.704-3.866-1.35-.13-.331-.69-1.352-1.18-1.625-.402-.216-.977-.748-.014-.762.906-.014 1.553.834 1.769 1.179 1.035 1.74 2.688 1.25 3.349.948.1-.747.402-1.25.733-1.538-2.559-.287-5.232-1.279-5.232-5.678 0-1.25.445-2.285 1.178-3.09-.115-.288-.517-1.467.115-3.048 0 0 .963-.302 3.163 1.179.92-.259 1.897-.388 2.875-.388.977 0 1.955.13 2.875.388 2.2-1.495 3.162-1.179 3.162-1.179.633 1.581.23 2.76.115 3.048.733.805 1.179 1.825 1.179 3.09 0 4.413-2.688 5.39-5.247 5.678.417.36.776 1.05.776 2.128 0 1.538-.014 2.774-.014 3.162 0 .302.216.662.79.547C20.709 21.637 24 17.324 24 12.25 24 5.896 18.854.75 12.5.75Z">
+                    </path>
+                </svg>Github</a>
+            <a href="mailto:pstypulk02@gmail.com">Get in touch</a>
+        </div>
+    </footer>
+</body>
+
+</html>
