@@ -1,13 +1,23 @@
 import * as djot from "@djot/djot";
 
-export function parseDjot(raw: string): { content: string, title?: string } {
+export type ParsedDjot = {
+    content: string,
+    title?: string,
+    description?: string,
+};
+
+export function parseDjot(raw: string): ParsedDjot {
     const ast = djot.parse(raw);
     const renderer = new djot.HTMLRenderer({
         overrides: sidenoteOverrides(),
     });
     let title: string | null = null;
+    let description: string | null = null;
     const content = renderer.render(ast);
-    return title ? { content, title } : { content };
+    const parsed: ParsedDjot = { content };
+    if (title !== null) parsed.title = title;
+    if (description !== null) parsed.description = description;
+    return parsed;
 
     function sidenoteOverrides(): djot.Visitor<djot.HTMLRenderer, string> {
         let sidenoteBodyIndex = 0;
@@ -23,6 +33,9 @@ export function parseDjot(raw: string): { content: string, title?: string } {
             }
             if (node.tag === "heading" && node.level === 1 && title === null) {
                 title = context.renderChildren(node);
+            }
+            if (node.tag === "para" && description === null) {
+                description = context.renderChildren(node);
             }
             if (node.attributes && node.attributes["refnote"]) {
                 const inx = sidenoteRefIndex++;

@@ -35,7 +35,7 @@ export async function buildPosts(): Promise<FileInfo[]> {
 async function renderWithTemplate(templateFile: string, props: { [key: string]: string }, templatesCache: ReadCache = {}): Promise<string> {
     let template = templatesCache[templateFile];
     if (!template) {
-        template = readFile(`templates/${templateFile}`, { encoding: "utf8" }).then();
+        template = readFile(`templates/${templateFile}`, { encoding: "utf8" });
         templatesCache[templateFile] = template;
     }
     let html = await template;
@@ -65,7 +65,6 @@ async function compileFile(filepath: string, templatesCache?: ReadCache): Promis
 
     const raw = await readFile(`contents/${filepath}`, { encoding: "utf8" });
     const props = parseDjot(raw);
-    props.title ??= basename(filepath).replace(".dj", "");
     try {
         const html = await renderWithTemplate("post.html", props, templatesCache);
         const path = filepath.replace(".dj", ".html");
